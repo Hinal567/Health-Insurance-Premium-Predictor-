@@ -1,5 +1,3 @@
-# codebasics ML course: codebasics.io, all rights reserverd
-
 import pandas as pd
 import joblib
 
@@ -17,22 +15,22 @@ def calculate_normalized_risk(medical_history):
         "no disease": 0,
         "none": 0
     }
-    # Split the medical history into potential two parts and convert to lowercase
+
     diseases = medical_history.lower().split(" & ")
 
-    # Calculate the total risk score by summing the risk scores for each part
-    total_risk_score = sum(risk_scores.get(disease, 0) for disease in diseases)  # Default to 0 if disease not found
 
-    max_score = 14 # risk score for heart disease (8) + second max risk score (6) for diabetes or high blood pressure
-    min_score = 0  # Since the minimum score is always 0
+    total_risk_score = sum(risk_scores.get(disease, 0) for disease in diseases)
 
-    # Normalize the total risk score
+    max_score = 14
+    min_score = 0
+
+
     normalized_risk_score = (total_risk_score - min_score) / (max_score - min_score)
 
     return normalized_risk_score
 
 def preprocess_input(input_dict):
-    # Define the expected columns and initialize the DataFrame with zeros
+
     expected_columns = [
         'age', 'number_of_dependants', 'income_lakhs', 'insurance_plan', 'genetical_risk', 'normalized_risk_score',
         'gender_Male', 'region_Northwest', 'region_Southeast', 'region_Southwest', 'marital_status_Unmarried',
@@ -93,7 +91,7 @@ def preprocess_input(input_dict):
     return df
 
 def handle_scaling(age, df):
-    # scale age and income_lakhs column
+
     if age <= 25:
         scaler_object = scaler_young
     else:
@@ -102,7 +100,7 @@ def handle_scaling(age, df):
     cols_to_scale = scaler_object['cols_to_scale']
     scaler = scaler_object['scaler']
 
-    df['income_level'] = None # since scaler object expects income_level supply it. This will have no impact on anything
+    df['income_level'] = None 
     df[cols_to_scale] = scaler.transform(df[cols_to_scale])
 
     df.drop('income_level', axis='columns', inplace=True)
